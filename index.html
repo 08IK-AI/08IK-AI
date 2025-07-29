@@ -1,0 +1,109 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>More Than Conquerors Skate Church</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            width: 100%;
+            text-align: center;
+            padding: 20px 0;
+        }
+        .container {
+            max-width: 800px;
+            padding: 20px;
+            text-align: center;
+        }
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 20px auto;
+            object-fit: cover;
+        }
+        .bio {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin: 20px 0;
+        }
+        .instagram-link {
+            display: inline-block;
+            background-color: #E1306C;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .instagram-link:hover {
+            background-color: #C13584;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>More Than Conquerors Skate Church</h1>
+    </header>
+    <div class="container">
+        <img src="https://scontent-dfw5-1.cdninstagram.com/v/t51.2885-19/428654400_927639088670386_5384923144828227209_n.jpg?stp=dst-jpg_s320x320_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=scontent-dfw5-1.cdninstagram.com&_nc_cat=110&_nc_oc=Q6cZ2QHjGePX9JBdVCXuBcrtyD6HTAE_47HWuv68E6MFU6Ek4hrKKQNXuTiTDOej_pGdjqM&_nc_ohc=9TnUMpDjyjAQ7kNvwHZV8RX&_nc_gid=vIMCt1yk5k1rQP-rcDRerA&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_AfRYzoqQpFWR_Ktq-Sy9GaV7pCF0-mTiRB5sk7VKauLw6w&oe=688EF0B4&_nc_sid=8b3546" alt="More Than Conquerors Skate Church Profile" class="profile-pic">
+        <div class="bio">
+            <p>More Than Conquerors Skate Church</p>
+            <p>Skateboarding, Jesus & Fun! Join us at Alliance Skate Park, Wednesdays at 6PM!</p>
+        </div>
+        <a href="https://www.instagram.com/mtcskatechurch/" class="instagram-link">Visit Our Instagram</a>
+    </div>
+</body>
+</html>
