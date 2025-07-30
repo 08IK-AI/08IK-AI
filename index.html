@@ -153,5 +153,23 @@
         </div>
         <a href="https://www.instagram.com/mtcskatechurch/" class="instagram-link">Visit Our Instagram</a>
     </div>
+<div id="daily-bible-verse" style="border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; font-family: Arial, sans-serif; max-width: 300px; margin: 10px auto; text-align: center;">
+  Loading daily Bible verse...
+</div>
+
+<script>
+  fetch('https://beta.ourmanna.com/api/v1/get?format=json')
+    .then(response => response.json())
+    .then(data => {
+      const verseContainer = document.getElementById('daily-bible-verse');
+      verseContainer.innerHTML = `
+        <p style="font-style: italic;">${data.verse.details.text}</p>
+        <small style="display: block; margin-top: 10px; color: #666;">— ${data.verse.details.reference} (${data.verse.details.version})</small>
+      `;
+    })
+    .catch(error => {
+      document.getElementById('daily-bible-verse').innerHTML = 'Unable to load verse. Please try again later.';
+    });
+</script>
 </body>
 </html>
